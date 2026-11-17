@@ -1,0 +1,19 @@
+{
+  "name": "workwork",
+  "version": "1.0.0",
+  "description": "High-signal FinTech job scanner using direct ATS feeds with deduplication",
+  "type": "module",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "scan": "node src/index.js",
+    "scan:all": "node src/index.js --all",
+    "match:resume": "node src/resume-matcher.js",
+    "sync:email": "node src/email-sync.js",
+    "tui": "./tui/target/release/workwork-tui",
+    "stats": "node src/index.js --stats"
+  },
+  "keywords": ["jobs", "fintech", "scraper", "ats", "greenhouse", "ashby", "lever"],
+  "author": "",
+  "license": "MIT"
+}

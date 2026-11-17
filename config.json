@@ -1,0 +1,61 @@
+{
+  "search": {
+    "includeKeywords": [
+      "qa",
+      "quality",
+      "test",
+      "sdet",
+      "automation",
+      "junior",
+      "entry",
+      "associate",
+      "software engineer",
+      "developer",
+      "backend",
+      "frontend",
+      "full stack",
+      "support engineer",
+      "solutions engineer"
+    ],
+    "excludeKeywords": [
+      "senior",
+      "sr.",
+      "sr ",
+      "staff",
+      "principal",
+      "lead",
+      "architect",
+      "director",
+      "vice president",
+      "vp",
+      "avp",
+      "head of",
+      "manager",
+      "engineer iii",
+      "engineer iv",
+      "engineer v",
+      "intern",
+      "internship",
+      "recruiter",
+      "account executive",
+      "sales development"
+    ],
+    "locations": [
+      "remote",
+      "us",
+      "united states",
+      "san francisco",
+      "new york",
+      "austin",
+      "seattle"
+    ],
+    "requireRemote": true,
+    "maxAgeDays": 21
+  },
+  "settings": {
+    "concurrency": 8,
+    "requestTimeoutMs": 10000,
+    "exportMarkdownPath": "matches_digest.md",
+    "exportJsonPath": "matches.json"
+  }
+}

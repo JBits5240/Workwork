@@ -1,0 +1,22 @@
+# Generated output — may contain personal job application data
+data/
+tailored_resumes/
+matches.json
+matches_digest.md
+resume_matches.md
+
+# Rust build artifacts
+tui/target/
+
+# Node
+node_modules/
+
+# Local SQLite databases
+*.db
+*.db-shm
+*.db-wal
+
+# Environment / secrets
+.env
+.env.local
+resume-profile.json

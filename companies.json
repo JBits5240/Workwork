@@ -1,0 +1,662 @@
+[
+  {
+    "name": "Ramp",
+    "category": "Spend Management",
+    "ats": "ashby",
+    "slug": "ramp"
+  },
+  {
+    "name": "Brex",
+    "category": "Corporate Cards / Banking",
+    "ats": "greenhouse",
+    "slug": "brex"
+  },
+  {
+    "name": "Plaid",
+    "category": "Financial Infrastructure",
+    "ats": "ashby",
+    "slug": "plaid"
+  },
+  {
+    "name": "Stripe",
+    "category": "Payments Infrastructure",
+    "ats": "greenhouse",
+    "slug": "stripe"
+  },
+  {
+    "name": "Robinhood",
+    "category": "Retail Brokerage",
+    "ats": "greenhouse",
+    "slug": "robinhood"
+  },
+  {
+    "name": "Affirm",
+    "category": "BNPL / Lending",
+    "ats": "greenhouse",
+    "slug": "affirm"
+  },
+  {
+    "name": "Toast",
+    "category": "Restaurant POS & FinTech",
+    "ats": "greenhouse",
+    "slug": "toast"
+  },
+  {
+    "name": "Carta",
+    "category": "Equity Management",
+    "ats": "greenhouse",
+    "slug": "carta"
+  },
+  {
+    "name": "Chime",
+    "category": "Consumer Banking",
+    "ats": "greenhouse",
+    "slug": "chime"
+  },
+  {
+    "name": "Gusto",
+    "category": "Payroll & HR",
+    "ats": "greenhouse",
+    "slug": "gusto"
+  },
+  {
+    "name": "Monzo",
+    "category": "Digital Banking",
+    "ats": "greenhouse",
+    "slug": "monzo"
+  },
+  {
+    "name": "Mercury",
+    "category": "Startup Banking",
+    "ats": "greenhouse",
+    "slug": "mercury"
+  },
+  {
+    "name": "Modern Treasury",
+    "category": "Payment Operations",
+    "ats": "ashby",
+    "slug": "moderntreasury"
+  },
+  {
+    "name": "Alloy",
+    "category": "Identity & Fraud Risk",
+    "ats": "greenhouse",
+    "slug": "alloy"
+  },
+  {
+    "name": "Sardine",
+    "category": "Fraud & Compliance",
+    "ats": "ashby",
+    "slug": "sardine"
+  },
+  {
+    "name": "Wealthfront",
+    "category": "Robo-advisor & Wealth",
+    "ats": "lever",
+    "slug": "wealthfront"
+  },
+  {
+    "name": "Betterment",
+    "category": "Robo-advisor & Wealth",
+    "ats": "greenhouse",
+    "slug": "betterment"
+  },
+  {
+    "name": "SoFi",
+    "category": "Digital Banking & Lending",
+    "ats": "greenhouse",
+    "slug": "sofi"
+  },
+  {
+    "name": "Dave",
+    "category": "Personal Finance",
+    "ats": "ashby",
+    "slug": "dave"
+  },
+  {
+    "name": "Step",
+    "category": "Teen Banking",
+    "ats": "greenhouse",
+    "slug": "step"
+  },
+  {
+    "name": "Current",
+    "category": "Consumer Banking",
+    "ats": "greenhouse",
+    "slug": "current"
+  },
+  {
+    "name": "Blend",
+    "category": "Mortgage & Banking Software",
+    "ats": "greenhouse",
+    "slug": "blend"
+  },
+  {
+    "name": "Forter",
+    "category": "E-Commerce Fraud Prevention",
+    "ats": "greenhouse",
+    "slug": "forter"
+  },
+  {
+    "name": "Upgrade",
+    "category": "Consumer Credit",
+    "ats": "greenhouse",
+    "slug": "upgrade"
+  },
+  {
+    "name": "Circle",
+    "category": "Stablecoin / Web3 FinTech",
+    "ats": "ashby",
+    "slug": "circle"
+  },
+  {
+    "name": "Paxos",
+    "category": "Blockchain Infrastructure",
+    "ats": "ashby",
+    "slug": "paxos"
+  },
+  {
+    "name": "Anchorage",
+    "category": "Crypto Custody / Bank",
+    "ats": "lever",
+    "slug": "anchorage"
+  },
+  {
+    "name": "Fireblocks",
+    "category": "Digital Asset Custody",
+    "ats": "greenhouse",
+    "slug": "fireblocks"
+  },
+  {
+    "name": "Acorns",
+    "category": "Micro-investing",
+    "ats": "ashby",
+    "slug": "acorns"
+  },
+  {
+    "name": "TabaPay",
+    "category": "Instant Payments API",
+    "ats": "greenhouse",
+    "slug": "tabapay"
+  },
+  {
+    "name": "DriveWealth",
+    "category": "Embedded Brokerage API",
+    "ats": "greenhouse",
+    "slug": "drivewealth"
+  },
+  {
+    "name": "Branch",
+    "category": "Workforce Payments",
+    "ats": "greenhouse",
+    "slug": "branch"
+  },
+  {
+    "name": "Cross River Bank",
+    "category": "Embedded FinTech Bank",
+    "ats": "greenhouse",
+    "slug": "crossriverbank"
+  },
+  {
+    "name": "Remote",
+    "category": "Global Payroll & Contractor Mgmt",
+    "ats": "greenhouse",
+    "slug": "remote"
+  },
+  {
+    "name": "dLocal",
+    "category": "Cross-Border Payments",
+    "ats": "lever",
+    "slug": "dlocal"
+  },
+  {
+    "name": "Ripple",
+    "category": "Cross-Border Settlement",
+    "ats": "greenhouse",
+    "slug": "ripple"
+  },
+  {
+    "name": "Gemini",
+    "category": "Crypto Exchange & Custody",
+    "ats": "greenhouse",
+    "slug": "gemini"
+  },
+  {
+    "name": "BitGo",
+    "category": "Digital Asset Security",
+    "ats": "greenhouse",
+    "slug": "bitgo"
+  },
+  {
+    "name": "Consensys",
+    "category": "Ethereum Software",
+    "ats": "greenhouse",
+    "slug": "consensys"
+  },
+  {
+    "name": "Ledger",
+    "category": "Hardware Wallets & Security",
+    "ats": "ashby",
+    "slug": "ledger"
+  },
+  {
+    "name": "Novo",
+    "category": "Small Business Banking",
+    "ats": "ashby",
+    "slug": "novo"
+  },
+  {
+    "name": "Treasury Prime",
+    "category": "Banking-as-a-Service",
+    "ats": "greenhouse",
+    "slug": "treasuryprime"
+  },
+  {
+    "name": "Lead Bank",
+    "category": "Next-Gen FinTech Bank",
+    "ats": "ashby",
+    "slug": "leadbank"
+  },
+  {
+    "name": "Lithic",
+    "category": "Card Issuing Infrastructure",
+    "ats": "greenhouse",
+    "slug": "lithic"
+  },
+  {
+    "name": "Unit",
+    "category": "Banking-as-a-Service",
+    "ats": "ashby",
+    "slug": "unit"
+  },
+  {
+    "name": "Column",
+    "category": "Developer Bank / FinTech Infrastructure",
+    "ats": "ashby",
+    "slug": "column"
+  },
+  {
+    "name": "Clear Street",
+    "category": "Prime Brokerage & FinTech",
+    "ats": "greenhouse",
+    "slug": "clearstreet"
+  },
+  {
+    "name": "Upstart",
+    "category": "AI Consumer Lending",
+    "ats": "greenhouse",
+    "slug": "upstart"
+  },
+  {
+    "name": "Bill.com",
+    "category": "B2B Financial Operations",
+    "ats": "greenhouse",
+    "slug": "billcom"
+  },
+  {
+    "name": "TrueLayer",
+    "category": "Open Banking Network",
+    "ats": "greenhouse",
+    "slug": "truelayer"
+  },
+  {
+    "name": "Array",
+    "category": "Consumer Credit Infrastructure",
+    "ats": "greenhouse",
+    "slug": "array"
+  },
+  {
+    "name": "TaxBit",
+    "category": "Digital Asset Tax & Accounting",
+    "ats": "greenhouse",
+    "slug": "taxbit"
+  },
+  {
+    "name": "Ocrolus",
+    "category": "Financial Document Automation",
+    "ats": "greenhouse",
+    "slug": "ocrolusinc"
+  },
+  {
+    "name": "Finch",
+    "category": "Employment & Payroll API",
+    "ats": "ashby",
+    "slug": "finch"
+  },
+  {
+    "name": "Runway",
+    "category": "Financial Planning & Analysis",
+    "ats": "ashby",
+    "slug": "runway"
+  },
+  {
+    "name": "Persona",
+    "category": "Identity Verification & Fraud",
+    "ats": "ashby",
+    "slug": "persona"
+  },
+  {
+    "name": "Middesk",
+    "category": "Business Identity Verification",
+    "ats": "ashby",
+    "slug": "middesk"
+  },
+  {
+    "name": "Vanta",
+    "category": "Automated Security & Compliance",
+    "ats": "ashby",
+    "slug": "vanta"
+  },
+  {
+    "name": "Coinbase",
+    "category": "Crypto Exchange & Web3 Payments",
+    "ats": "greenhouse",
+    "slug": "coinbase"
+  },
+  {
+    "name": "Blockchain.com",
+    "category": "Crypto Financial Services",
+    "ats": "greenhouse",
+    "slug": "blockchain"
+  },
+  {
+    "name": "Uniswap Labs",
+    "category": "Decentralized Finance Protocol",
+    "ats": "ashby",
+    "slug": "uniswap"
+  },
+  {
+    "name": "Dune",
+    "category": "Crypto & Financial Analytics",
+    "ats": "ashby",
+    "slug": "dune"
+  },
+  {
+    "name": "Paradigm",
+    "category": "Crypto Research & Investment",
+    "ats": "ashby",
+    "slug": "paradigm"
+  },
+  {
+    "name": "Linear",
+    "category": "Issue Tracking & Dev Tools",
+    "ats": "ashby",
+    "slug": "linear"
+  },
+  {
+    "name": "Resend",
+    "category": "Developer Email Infrastructure",
+    "ats": "ashby",
+    "slug": "resend"
+  },
+  {
+    "name": "Mintlify",
+    "category": "Developer Documentation Platform",
+    "ats": "ashby",
+    "slug": "mintlify"
+  },
+  {
+    "name": "Warp",
+    "category": "Modern Terminal & Cloud Tools",
+    "ats": "ashby",
+    "slug": "warp"
+  },
+  {
+    "name": "PostHog",
+    "category": "Open Source Analytics & Product OS",
+    "ats": "ashby",
+    "slug": "posthog"
+  },
+  {
+    "name": "Supabase",
+    "category": "Open Source Backend Infrastructure",
+    "ats": "ashby",
+    "slug": "supabase"
+  },
+  {
+    "name": "Temporal",
+    "category": "Workflow Orchestration Platform",
+    "ats": "ashby",
+    "slug": "temporal"
+  },
+  {
+    "name": "Render",
+    "category": "Cloud Hosting & Deployment Platform",
+    "ats": "ashby",
+    "slug": "render"
+  },
+  {
+    "name": "Replit",
+    "category": "Cloud Software Creation",
+    "ats": "ashby",
+    "slug": "replit"
+  },
+  {
+    "name": "Cohere",
+    "category": "Enterprise AI & NLP",
+    "ats": "ashby",
+    "slug": "cohere"
+  },
+  {
+    "name": "Modal",
+    "category": "Serverless Cloud & GPU Compute",
+    "ats": "ashby",
+    "slug": "modal"
+  },
+  {
+    "name": "Pinecone",
+    "category": "Vector Database for AI",
+    "ats": "ashby",
+    "slug": "pinecone"
+  },
+  {
+    "name": "Weaviate",
+    "category": "Open Source Vector Search Engine",
+    "ats": "ashby",
+    "slug": "weaviate"
+  },
+  {
+    "name": "LangChain",
+    "category": "AI Framework & Tooling",
+    "ats": "ashby",
+    "slug": "langchain"
+  },
+  {
+    "name": "Figure",
+    "category": "Blockchain Lending & HELOC",
+    "ats": "greenhouse",
+    "slug": "figure"
+  },
+  {
+    "name": "Enova",
+    "category": "Online Financial Services & Lending",
+    "ats": "greenhouse",
+    "slug": "enova"
+  },
+  {
+    "name": "Sezzle",
+    "category": "BNPL / Consumer Credit",
+    "ats": "greenhouse",
+    "slug": "sezzle"
+  },
+  {
+    "name": "Riskified",
+    "category": "E-Commerce Fraud Prevention",
+    "ats": "greenhouse",
+    "slug": "riskified"
+  },
+  {
+    "name": "Oscar Health",
+    "category": "Tech-Driven Health Insurance",
+    "ats": "greenhouse",
+    "slug": "oscar"
+  },
+  {
+    "name": "Karat",
+    "category": "Technical Assessment Platform",
+    "ats": "greenhouse",
+    "slug": "karat"
+  },
+  {
+    "name": "ClickHouse",
+    "category": "Real-Time Columnar Database",
+    "ats": "ashby",
+    "slug": "clickhouse"
+  },
+  {
+    "name": "Cursor (Anysphere)",
+    "category": "AI Code Editor",
+    "ats": "ashby",
+    "slug": "cursor"
+  },
+  {
+    "name": "Cognition (Devin)",
+    "category": "AI Software Engineering Agent",
+    "ats": "ashby",
+    "slug": "cognition"
+  },
+  {
+    "name": "Cerebras",
+    "category": "AI Supercomputing & Inference",
+    "ats": "ashby",
+    "slug": "cerebras"
+  },
+  {
+    "name": "Baseten",
+    "category": "Model Serving & Inference Infra",
+    "ats": "ashby",
+    "slug": "baseten"
+  },
+  {
+    "name": "Lambda",
+    "category": "Deep Learning Cloud & GPUs",
+    "ats": "ashby",
+    "slug": "lambda"
+  },
+  {
+    "name": "Fireworks AI",
+    "category": "Generative AI Platform",
+    "ats": "ashby",
+    "slug": "fireworks"
+  },
+  {
+    "name": "Factory",
+    "category": "Autonomous Dev Droids",
+    "ats": "ashby",
+    "slug": "factory"
+  },
+  {
+    "name": "Exa (Metaphor)",
+    "category": "Neural Search Engine for AI",
+    "ats": "ashby",
+    "slug": "exa"
+  },
+  {
+    "name": "Dust",
+    "category": "Custom AI Assistant Platform",
+    "ats": "ashby",
+    "slug": "dust"
+  },
+  {
+    "name": "Incident.io",
+    "category": "Incident Response Platform",
+    "ats": "ashby",
+    "slug": "incident"
+  },
+  {
+    "name": "RunPod",
+    "category": "GPU Cloud & Serverless AI",
+    "ats": "ashby",
+    "slug": "runpod"
+  },
+  {
+    "name": "Tavily",
+    "category": "Search API for LLMs",
+    "ats": "ashby",
+    "slug": "tavily"
+  },
+  {
+    "name": "Magic",
+    "category": "Frontier AI Architecture",
+    "ats": "ashby",
+    "slug": "magic"
+  },
+  {
+    "name": "Railway",
+    "category": "Developer Cloud Infrastructure",
+    "ats": "ashby",
+    "slug": "railway"
+  },
+  {
+    "name": "MotherDuck",
+    "category": "Serverless DuckDB Cloud",
+    "ats": "ashby",
+    "slug": "motherduck"
+  },
+  {
+    "name": "Poolside",
+    "category": "Frontier AI Foundation Models",
+    "ats": "ashby",
+    "slug": "poolside"
+  },
+  {
+    "name": "Cosine",
+    "category": "Autonomous AI Dev Engine",
+    "ats": "ashby",
+    "slug": "cosine"
+  },
+  {
+    "name": "Zed",
+    "category": "High-Performance Rust Code Editor",
+    "ats": "ashby",
+    "slug": "zed"
+  },
+  {
+    "name": "Grafana Labs",
+    "category": "Open Source Observability",
+    "ats": "greenhouse",
+    "slug": "grafanalabs"
+  },
+  {
+    "name": "Cockroach Labs",
+    "category": "Distributed SQL Database",
+    "ats": "greenhouse",
+    "slug": "cockroachlabs"
+  },
+  {
+    "name": "Yugabyte",
+    "category": "Distributed Cloud Postgres",
+    "ats": "greenhouse",
+    "slug": "yugabyte"
+  },
+  {
+    "name": "PagerDuty",
+    "category": "Digital Operations & Reliability",
+    "ats": "greenhouse",
+    "slug": "pagerduty"
+  },
+  {
+    "name": "New Relic",
+    "category": "Observability Platform",
+    "ats": "greenhouse",
+    "slug": "newrelic"
+  },
+  {
+    "name": "Datadog",
+    "category": "Monitoring & Security Platform",
+    "ats": "greenhouse",
+    "slug": "datadog"
+  },
+  {
+    "name": "Elastic",
+    "category": "Search & Observability",
+    "ats": "greenhouse",
+    "slug": "elastic"
+  },
+  {
+    "name": "MongoDB",
+    "category": "Developer Data Platform",
+    "ats": "greenhouse",
+    "slug": "mongodb"
+  }
+]
