@@ -5,58 +5,28 @@ import { fileURLToPath } from "node:url";
 import { scrapeGreenhouse } from "./scrapers/greenhouse.js";
 import { scrapeAshby } from "./scrapers/ashby.js";
 import { scrapeLever } from "./scrapers/lever.js";
+import { loadProfile, getAllSkills } from "./profile-loader.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
 
-export const USER_RESUME_PROFILE = {
-  name: "YOUR NAME",
-  currentRole: "Software Quality Assurance Analyst",
-  tagline: "Software QA Analyst — testing, code review, AI integration, and automation infrastructure",
-  location: "Your City, ST / United States (Remote Preferred)",
-  experience: [
-    {
-      company: "TechCorp Inc.",
-      title: "Software Quality Assurance Analyst",
-      period: "2022–Present",
-      highlights: [
-        "Code review, manual and exploratory testing across web and apps",
-        "Built AI pipeline tool cutting ticket completion time by ~75% and enabling simultaneous ticket testing",
-        "Pushed for automation on workflow pain points; built internal tooling & infrastructure",
-        "Led hands-on AI skills sessions and workshops for teams and clients"
-      ]
-    },
-    {
-      company: "Field Dynamics LLC",
-      title: "Lead Field Operations Specialist",
-      period: "2016–2020",
-      highlights: ["Field equipment, customer service, training, team operations"]
-    }
-  ],
-  skills: {
-    qa: ["qa", "quality assurance", "quality engineer", "test", "testing", "uat", "exploratory", "regression", "sdet", "verification"],
-    automation: ["automation", "playwright", "pipeline", "infrastructure", "tooling", "scripting"],
-    ai: ["ai integration", "ai pipeline", "ai adoption", "prompt", "workflow", "ai tooling", "claude", "cursor"],
-    supportSolutions: ["technical support", "support engineer", "solutions engineer", "customer engineering", "tier 2", "tier 3", "operations analyst"],
-    languages: ["ruby", "python", "rust"]
-  }
-};
+export const USER_RESUME_PROFILE = loadProfile();
 
 /**
- * Scores a job against candidate's specific resume profile.
+ * Scores a job against the candidate's specific profile and target roles.
  * Returns { score, tier, matchReasons, isRemoteUs }
  */
-export function scoreJobAgainstResume(job, maxAgeDays = 21) {
+export function scoreJobAgainstResume(job, profile = loadProfile(), maxAgeDays = 21) {
   let score = 0;
   const matchReasons = [];
 
-  // 0. Age check: ignore listings older than 3 weeks (21 days)
+  // 0. Age check: ignore listings older than maxAgeDays
   if (maxAgeDays && job.updatedAt) {
     const jobDate = new Date(job.updatedAt).getTime();
     if (!isNaN(jobDate)) {
       const ageDays = (Date.now() - jobDate) / (1000 * 60 * 60 * 24);
       if (ageDays > maxAgeDays) {
-        return { score: 0, tier: "EXCLUDED", matchReasons: [`Listing is ${Math.round(ageDays)} days old (> 21 days)`] };
+        return { score: 0, tier: "EXCLUDED", matchReasons: [`Listing is ${Math.round(ageDays)} days old (> ${maxAgeDays} days)`] };
       }
     }
   }
@@ -66,62 +36,80 @@ export function scoreJobAgainstResume(job, maxAgeDays = 21) {
   const loc = (job.location || "").toLowerCase();
   const fullText = `${title} ${dept}`;
 
-  // Check Location: Remote or US based is preferred
+  // Check Location & Remote preferences
   const isRemote = job.isRemote || /remote/i.test(loc) || /remote/i.test(title);
   const isExcludedGeo = /(london|uk|united kingdom|canada|emea|latam|india|singapore|berlin|germany|mexico|taiwan|paris|argentina|brazil|uae|dubai|united arab emirates|europe|france|spain)/i.test(loc);
-  const isUS = !isExcludedGeo && (/(remote.*(us|usa)|us.*remote|united states|oklahoma|new york|san francisco|austin|seattle|california|remote)/i.test(loc) || isRemote);
-  
-  // Hard penalties for non-applicable regions or executive titles
+  const candidateCity = (profile.candidate?.city || "").toLowerCase();
+  const matchesLocalCity = candidateCity && loc.includes(candidateCity.split(",")[0].trim());
+  const isUS = !isExcludedGeo && (/(remote.*(us|usa)|us.*remote|united states|new york|san francisco|austin|seattle|california|remote)/i.test(loc) || isRemote || matchesLocalCity);
+
+  // Hard penalties for non-technical sales / executive roles
   if (/(director|vice president|vp|head of|counsel|account executive|sales rep)/i.test(title)) {
     return { score: 0, tier: "EXCLUDED", matchReasons: ["Executive or Non-Technical Sales role"] };
   }
   if (isExcludedGeo) {
-    return { score: 0, tier: "EXCLUDED", matchReasons: ["Outside US / Excluded Region"] };
+    return { score: 0, tier: "EXCLUDED", matchReasons: ["Outside Target Region"] };
   }
 
-  // 1. Direct QA / Quality / Test Title (Highest Match)
-  if (/\b(qa|quality|test|testing|sdet|uat)\b/i.test(title)) {
-    if (/\b(analyst|specialist|coordinator|associate)\b/i.test(title)) {
-      score += 60;
-      matchReasons.push("Direct QA/Test Analyst title match (Matches current role)");
-    } else if (/\b(engineer ii|engineer|automation engineer|automation developer)\b/i.test(title)) {
+  // 1. Direct Target Role Match (from user's profile.json)
+  const targetRoles = profile.targetRoles || [];
+  let directRoleMatched = false;
+  for (const tr of targetRoles) {
+    const trLower = tr.toLowerCase();
+    if (title.includes(trLower)) {
       score += 55;
-      matchReasons.push("QA/Test/Automation Engineer (Matches QA + automation profile)");
-    } else if (/\b(lead|senior|staff)\b/i.test(title)) {
-      score += 45;
-      matchReasons.push("Senior/Lead QA (Relevant domain, higher seniority)");
-    } else {
-      score += 50;
-      matchReasons.push("Quality / Testing domain match");
+      matchReasons.push(`Direct target role match: "${tr}"`);
+      directRoleMatched = true;
+      break;
     }
   }
 
-  // 2. Technical Support / Solutions / Customer Engineering Match
-  if (/\b(support engineer|technical support|solutions engineer|customer engineer|triage)\b/i.test(title)) {
-    score += 35;
-    matchReasons.push("Technical Support / Solutions Engineering (Matches troubleshooting, client coaching, and QA background)");
+  if (!directRoleMatched) {
+    // Check keyword parts of target roles
+    const roleKeywords = targetRoles.flatMap(r => r.toLowerCase().split(/\s+/)).filter(w => w.length > 2);
+    const matchedParts = [...new Set(roleKeywords.filter(w => title.includes(w)))];
+    if (matchedParts.length >= 2) {
+      score += 40;
+      matchReasons.push(`Role alignment match: ${matchedParts.join(", ")}`);
+    } else if (matchedParts.length === 1) {
+      score += 25;
+      matchReasons.push(`Role keyword match: ${matchedParts[0]}`);
+    }
   }
 
-  // 3. Automation & AI Workflow / Tooling
-  if (/\b(automation|ai ops|workflow|internal tools|developer experience)\b/i.test(fullText)) {
-    score += 20;
-    matchReasons.push("Automation / Tooling / AI workflow focus");
+  // 2. Candidate Skills Match (from user's profile.json)
+  const allSkills = getAllSkills();
+  const matchedSkills = [];
+  for (const skill of allSkills) {
+    const sLower = skill.toLowerCase();
+    if (sLower.length >= 2) {
+      const regex = new RegExp(`\\b${sLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}\\b`, "i");
+      if (regex.test(fullText)) {
+        matchedSkills.push(skill);
+      }
+    }
   }
 
-  // 4. Remote US Bonus
-  if (isRemote && isUS) {
+  if (matchedSkills.length > 0) {
+    const skillScore = Math.min(30, matchedSkills.length * 10);
+    score += skillScore;
+    matchReasons.push(`Matched skills: ${matchedSkills.slice(0, 4).join(", ")}`);
+  }
+
+  // 3. Location / Remote Match Bonus
+  if (isRemote && (profile.candidate?.remoteEligible ?? true)) {
     score += 15;
-    matchReasons.push("US Remote friendly");
-  } else if (isRemote) {
-    score += 10;
-    matchReasons.push("Remote friendly");
+    matchReasons.push("Remote friendly (aligns with preferences)");
+  } else if (matchesLocalCity) {
+    score += 15;
+    matchReasons.push(`Matches preferred local region: ${profile.candidate.city}`);
   }
 
   // Determine Match Tier
   let tier = "TIER_3_ADJACENT";
   if (score >= 60) {
     tier = "TIER_1_EXACT";
-  } else if (score >= 45) {
+  } else if (score >= 40) {
     tier = "TIER_2_STRONG";
   } else if (score < 25) {
     tier = "LOW_MATCH";
@@ -136,13 +124,18 @@ export function scoreJobAgainstResume(job, maxAgeDays = 21) {
 }
 
 async function runResumeMatcher() {
+  const profile = loadProfile();
   const companiesPath = path.join(ROOT_DIR, "companies.json");
   const companies = JSON.parse(fs.readFileSync(companiesPath, "utf8"));
 
-  console.log(`\n🎯 CROSS-REFERENCING FinTech Jobs against Candidate's Resume:`);
-  console.log(`• Profile: ${USER_RESUME_PROFILE.currentRole}`);
-  console.log(`• Core Focus: QA, Test Automation (Playwright), AI Tooling, Code Review`);
-  console.log(`• Preferred: Remote (US)`);
+  const candidateName = profile.candidate?.name || "Candidate";
+  const targetRolesStr = (profile.targetRoles || []).slice(0, 4).join(", ");
+  const skillsSample = getAllSkills().slice(0, 6).join(", ");
+
+  console.log(`\n🎯 CROSS-REFERENCING FinTech Jobs against Profile: ${candidateName}`);
+  console.log(`• Target Roles: ${targetRolesStr || "Configured roles"}`);
+  console.log(`• Core Skills:  ${skillsSample || "Configured skills"}`);
+  console.log(`• Preferred:    ${profile.candidate?.city || "Remote"}`);
   console.log("------------------------------------------------------------------");
 
   const startTime = Date.now();
@@ -168,7 +161,7 @@ async function runResumeMatcher() {
   // Score all jobs
   const scoredJobs = [];
   for (const job of allRawJobs) {
-    const analysis = scoreJobAgainstResume(job);
+    const analysis = scoreJobAgainstResume(job, profile);
     if (analysis.score >= 30) {
       scoredJobs.push({
         ...job,
@@ -187,20 +180,20 @@ async function runResumeMatcher() {
   const tier2 = scoredJobs.filter(j => j.tier === "TIER_2_STRONG");
   const tier3 = scoredJobs.filter(j => j.tier === "TIER_3_ADJACENT");
 
-  console.log(`\n✨ MATCH RESULTS FOR CANDIDATE:`);
-  console.log(`  🌟 Tier 1 (Direct QA / Test Analyst / UAT Matches):  ${tier1.length}`);
-  console.log(`  ⚡ Tier 2 (QA Automation / QA II / Testing Infra):    ${tier2.length}`);
-  console.log(`  🛠️ Tier 3 (Support Engineer / Solutions / AI Ops):   ${tier3.length}`);
+  console.log(`\n✨ MATCH RESULTS FOR ${candidateName.toUpperCase()}:`);
+  console.log(`  🌟 Tier 1 (Direct Target Role Matches):              ${tier1.length}`);
+  console.log(`  ⚡ Tier 2 (Strong Skill & Domain Alignment):        ${tier2.length}`);
+  console.log(`  🛠️ Tier 3 (High-Value Adjacent Opportunities):      ${tier3.length}`);
 
   // Generate Resume Matches Report
   const reportPath = path.join(ROOT_DIR, "resume_matches.md");
   let md = `# 🎯 Tailored FinTech Job Matches\n\n`;
-  md += `> **Candidate**: **YOUR NAME** — Software Quality Assurance Analyst  \n`;
-  md += `> **Core Background**: QA (Manual/Exploratory, Regression), Test Automation (Playwright), AI Pipeline Tooling, Client Support  \n`;
+  md += `> **Candidate**: **${candidateName}**  \n`;
+  md += `> **Target Roles**: ${targetRolesStr}  \n`;
   md += `> **Generated**: ${new Date().toLocaleString()}  \n\n`;
 
-  md += `## 🌟 Tier 1: Highest Match (Direct QA, Test Analyst, & UAT)\n`;
-  md += `*These roles directly align with your day-to-day software quality engineering background.*\n\n`;
+  md += `## 🌟 Tier 1: Highest Match (Direct Target Role Alignment)\n`;
+  md += `*These roles directly align with your target roles and primary skills.*\n\n`;
   for (const j of tier1) {
     const remoteStr = j.isRemote ? "🌐 Remote" : "📍 On-Site";
     md += `### [${j.title}](${j.url}) — **${j.company}**\n`;
@@ -210,8 +203,8 @@ async function runResumeMatcher() {
     md += `- [ ] [**Click to Apply Directly**](${j.url})\n\n`;
   }
 
-  md += `## ⚡ Tier 2: Strong Match (QA Automation & Test Infrastructure)\n`;
-  md += `*Roles leveraging your automation infrastructure, Playwright, and test tooling experience.*\n\n`;
+  md += `## ⚡ Tier 2: Strong Match (Technical & Skill Alignment)\n`;
+  md += `*Roles leveraging your core technical skills, frameworks, and background.*\n\n`;
   for (const j of tier2) {
     const remoteStr = j.isRemote ? "🌐 Remote" : "📍 On-Site";
     md += `### [${j.title}](${j.url}) — **${j.company}**\n`;
@@ -221,8 +214,8 @@ async function runResumeMatcher() {
     md += `- [ ] [**Click to Apply Directly**](${j.url})\n\n`;
   }
 
-  md += `## 🛠️ Tier 3: High-Value Adjacent Roles (Support & Solutions Engineering)\n`;
-  md += `*Roles valuing your technical troubleshooting, customer service background, and AI training capabilities.*\n\n`;
+  md += `## 🛠️ Tier 3: High-Value Adjacent Roles\n`;
+  md += `*Roles matching your broader experience, cross-functional capabilities, and tooling.*\n\n`;
   for (const j of tier3.slice(0, 15)) {
     const remoteStr = j.isRemote ? "🌐 Remote" : "📍 On-Site";
     md += `### [${j.title}](${j.url}) — **${j.company}**\n`;
@@ -245,7 +238,9 @@ async function runResumeMatcher() {
   }
 }
 
-runResumeMatcher().catch(err => {
-  console.error("Error in resume matcher:", err);
-  process.exit(1);
-});
+if (process.argv[1] && process.argv[1].endsWith("resume-matcher.js")) {
+  runResumeMatcher().catch(err => {
+    console.error("Error in resume matcher:", err);
+    process.exit(1);
+  });
+}

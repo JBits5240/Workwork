@@ -5,9 +5,11 @@
   "type": "module",
   "main": "src/index.js",
   "scripts": {
+    "setup": "node src/setup.js",
     "start": "node src/index.js",
     "scan": "node src/index.js",
     "scan:all": "node src/index.js --all",
+    "match": "node src/resume-matcher.js",
     "match:resume": "node src/resume-matcher.js",
     "sync:email": "node src/email-sync.js",
     "tui": "./tui/target/release/workwork-tui",

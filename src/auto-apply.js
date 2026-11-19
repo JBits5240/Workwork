@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { JobDatabase } from "./database.js";
 import { tailorResumeForJob } from "./resume-tailor.js";
+import { loadProfile, getCandidate } from "./profile-loader.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
@@ -19,53 +20,48 @@ export class AutoApplyEngine {
    */
   suggestAnswerForQuestion(questionText, job) {
     const qLower = (questionText || "").toLowerCase();
-
-    if (/(playwright|automation|automated test|selenium|cypress)/i.test(qLower)) {
-      return {
-        answer: "At my previous company, I utilized Playwright for browser automation and repeatable end-to-end UI verification suites. I also engineered an internal AI pipeline tool that accelerated ticket testing by ~75% and enabled parallel test validation.",
-        confidence: 85
-      };
-    }
-
-    if (/(exploratory|manual|defect|bug|triage|regression|test plan)/i.test(qLower)) {
-      return {
-        answer: "In my daily work as a Software QA Analyst, I perform manual and exploratory testing across web applications and platforms. I participate in engineering code reviews to catch logic risks and UX defects before release.",
-        confidence: 90
-      };
-    }
-
-    if (/(ai|artificial intelligence|llm|tools|workflow)/i.test(qLower)) {
-      return {
-        answer: "I served as an early lead on practical AI workflow integration, building internal tooling that cut ticket completion times by ~75% and facilitating hands-on AI adoption sessions for teams and clients.",
-        confidence: 95
-      };
-    }
-
-    if (/(customer|client|coaching|communication|support)/i.test(qLower)) {
-      return {
-        answer: "I combine technical QA analysis with 4+ years of customer service and field handoff experience, alongside leading technical training workshops for clients.",
-        confidence: 85
-      };
-    }
+    const profile = loadProfile();
+    const candidate = getCandidate();
 
     if (/(authorized to work|sponsorship|visa)/i.test(qLower)) {
       return {
-        answer: "Yes, I am a US citizen and authorized to work in the United States without sponsorship.",
+        answer: profile.screeningAnswers?.sponsorship || candidate.workAuthorization || "Yes, I am a US citizen and authorized to work in the United States without sponsorship.",
         confidence: 100
       };
     }
 
     if (/(why do you want to work|why|interest)/i.test(qLower)) {
       return {
-        answer: `I am excited by ${job.company}'s mission in modern financial technology and look forward to bringing dependable quality verification, test automation, and tooling to the ${job.title} team.`,
-        confidence: 70
+        answer: profile.screeningAnswers?.interest || `I am excited by ${job.company}'s mission and engineering culture, and look forward to contributing to the ${job.title} team.`,
+        confidence: 75
       };
     }
 
-    // Ambiguous or odd question -> Low confidence flag
+    if (/(playwright|automation|automated test|selenium|cypress|testing)/i.test(qLower)) {
+      return {
+        answer: "I bring solid experience building automated tests and regression suites, integrating testing into CI/CD pipelines to ensure release quality.",
+        confidence: 85
+      };
+    }
+
+    if (/(ai|artificial intelligence|llm|tools|workflow)/i.test(qLower)) {
+      return {
+        answer: "I actively integrate AI-assisted developer workflows and tooling to accelerate development cycles while maintaining strict code quality and review standards.",
+        confidence: 90
+      };
+    }
+
+    if (/(customer|client|communication|support|cross-functional)/i.test(qLower)) {
+      return {
+        answer: "I emphasize clear, plain-language technical communication, proactive defect triage, and dependable collaboration across product and engineering teams.",
+        confidence: 85
+      };
+    }
+
+    // Default general answer
     return {
-      answer: "Relevant experience in software quality assurance, defect triage, and automated testing workflows.",
-      confidence: 40
+      answer: profile.screeningAnswers?.experience || `Demonstrated background delivering reliable software solutions and technical problem-solving for ${job.title}.`,
+      confidence: 50
     };
   }
 

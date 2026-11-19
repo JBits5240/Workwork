@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 
 import { JobDatabase } from "./database.js";
 import { getResumeDiff } from "./resume-tailor.js";
+import { loadProfile, getCandidate } from "./profile-loader.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT_DIR = path.resolve(__dirname, "..");
@@ -42,11 +43,14 @@ export class ReviewCockpitEngine {
     const autoFilled = [];
     const needsReview = [];
 
+    const candidate = getCandidate();
+    const profile = loadProfile();
+
     // Always include standard candidate auto-fills
     autoFilled.push({
       field: "Contact & Profile",
       question: "Full Name, Email, Phone, Location",
-      answer: "YOUR NAME | your.email@example.com | 555-555-5555",
+      answer: `${candidate.name || "YOUR NAME"} | ${candidate.email || "your.email@example.com"} | ${candidate.phone || "555-555-5555"} | ${candidate.city || "Your City, ST"}`,
       source: "Candidate Profile"
     });
     autoFilled.push({
@@ -61,7 +65,7 @@ export class ReviewCockpitEngine {
       autoFilled.push({
         field: "Work Authorization",
         question: "Are you legally authorized to work in the United States?",
-        answer: "Yes, US Citizen",
+        answer: candidate.workAuthorization || "Yes, US Citizen (No sponsorship required)",
         source: "Saved Memory"
       });
       autoFilled.push({
@@ -121,11 +125,11 @@ export class ReviewCockpitEngine {
           confidence: 80,
           required: !!q.required
         });
-      } else if (/(playwright|automation|test|qa|experience|years)/i.test(lLower)) {
+      } else if (/(experience|years|background|stack|technologies|projects)/i.test(lLower)) {
         needsReview.push({
           id: `q_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
           question: label,
-          suggestedAnswer: "In my recent QA roles, I utilize Playwright for browser automation suites and engineered custom QA tooling accelerating test cycles by ~75%.",
+          suggestedAnswer: profile.screeningAnswers?.experience || `Relevant background and proven technical delivery for ${job.title} at ${job.company}.`,
           confidence: 85,
           required: !!q.required
         });
@@ -133,7 +137,7 @@ export class ReviewCockpitEngine {
         needsReview.push({
           id: `q_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
           question: label,
-          suggestedAnswer: `Relevant QA testing, defect triage, and automated verification experience tailored for ${job.company}.`,
+          suggestedAnswer: `Relevant technical experience and problem-solving background tailored for ${job.company}.`,
           confidence: 60,
           required: !!q.required
         });

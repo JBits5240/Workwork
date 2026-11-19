@@ -72,15 +72,15 @@ struct JobReviewItem {
 
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 enum RoleFilter {
-    JuniorAndQa, // Default: QA, Quality Assurance, Test, SDET, Junior, Jr, Entry Level, Associate, Support, Solutions
-    NonSenior,   // All roles excluding Senior, Staff, Principal, Lead, Architect, Manager, Director, Head of, VP
-    All,         // All roles
+    TargetMatches, // Matches user's configured search keywords from config.json
+    NonSenior,     // All roles excluding Senior, Staff, Principal, Lead, Architect, Manager, Director, Head of, VP
+    All,           // All roles
 }
 
 impl RoleFilter {
     fn label(&self) -> &'static str {
         match self {
-            RoleFilter::JuniorAndQa => "🎯 Junior & QA Only",
+            RoleFilter::TargetMatches => "🎯 Target Matches (Configured)",
             RoleFilter::NonSenior => "🚀 Non-Senior Roles",
             RoleFilter::All => "🌐 All Roles (inc. Senior)",
         }
@@ -117,7 +117,7 @@ impl AppState {
         let mut app = Self {
             tab_index: 1, // Starts directly on Tab 2: Application Review & Walkthrough!
             remote_only: true,
-            role_filter: RoleFilter::JuniorAndQa, // Filter out Senior roles by default! Focus on Junior & QA
+            role_filter: RoleFilter::TargetMatches, // Focus on user's configured search matches by default!
             applications: Vec::new(),
             app_list_state: ListState::default(),
             unapplied_jobs: Vec::new(),
@@ -201,23 +201,12 @@ impl AppState {
             AND title NOT LIKE '%Engineer V%'
         ";
 
-        let junior_qa_clause = "
-            AND (
-              title LIKE '%QA%'
-              OR title LIKE '%Quality%'
-              OR title LIKE '%Test%'
-              OR title LIKE '%SDET%'
-              OR title LIKE '%Junior%'
-              OR title LIKE '%Jr%'
-              OR title LIKE '%Entry%'
-              OR title LIKE '%Associate%'
-              OR title LIKE '%Support%'
-              OR title LIKE '%Solutions%'
-            )
+        let target_match_clause = "
+            AND (matched_keyword IS NOT NULL AND matched_keyword != '')
         ";
 
         let role_clause = match self.role_filter {
-            RoleFilter::JuniorAndQa => format!("{}{}", senior_exclusion_clause, junior_qa_clause),
+            RoleFilter::TargetMatches => format!("{}{}", senior_exclusion_clause, target_match_clause),
             RoleFilter::NonSenior => senior_exclusion_clause.to_string(),
             RoleFilter::All => String::new(),
         };
@@ -344,12 +333,12 @@ impl AppState {
                     company: job.company.clone(),
                     title: job.title.clone(),
                     url: job.url.clone(),
-                    base_tagline: "Software QA Analyst — manual & exploratory testing, defect triage, UAT verification.".to_string(),
-                    tailored_tagline: format!("Software QA Analyst — testing, code review, AI integration, and automation tooling for {}.", job.company),
-                    bullet_diff: "+ [Priority #1] Code Review & Exploratory Manual Testing across web platforms\n+ [Priority #2] AI Pipeline: Tool accelerating test cycle times ~75%".to_string(),
-                    alignment_notes: format!("• Tailored for {}: Verified QA background, reproducible triage. Zero fabricated facts.", job.company),
+                    base_tagline: "Candidate Profile — tailored role alignment and verified facts.".to_string(),
+                    tailored_tagline: format!("Targeted application for {} at {}.", job.title, job.company),
+                    bullet_diff: "+ [Priority #1] Direct role alignment from candidate profile\n+ [Priority #2] Key technical skills and achievements".to_string(),
+                    alignment_notes: format!("• Tailored for {}: Grounded technical profile. Zero fabricated facts.", job.company),
                     tailored_resume_path: format!("tailored_resumes/resume_{}.md", job.company.to_lowercase()),
-                    auto_filled_summary: "✓ [Auto-Filled] Contact: YOUR NAME | your.email@example.com\n✓ [Auto-Filled] Work Auth: US Citizen (No sponsorship required)".to_string(),
+                    auto_filled_summary: "✓ [Auto-Filled] Contact: Name & Email from profile.json\n✓ [Auto-Filled] Work Auth: Authorized to work (No sponsorship required)".to_string(),
                     unfilled_questions_text: "✓ Standard fields auto-filled. Press [Enter] to approve & submit.".to_string(),
                     has_unfilled: false,
                 });
@@ -639,9 +628,9 @@ fn run_app(
                         }
                         KeyCode::Char('f') | KeyCode::Char('F') => {
                             app.role_filter = match app.role_filter {
-                                RoleFilter::JuniorAndQa => RoleFilter::NonSenior,
+                                RoleFilter::TargetMatches => RoleFilter::NonSenior,
                                 RoleFilter::NonSenior => RoleFilter::All,
-                                RoleFilter::All => RoleFilter::JuniorAndQa,
+                                RoleFilter::All => RoleFilter::TargetMatches,
                             };
                             app.refresh_data(conn);
                             if !app.unapplied_jobs.is_empty() {
